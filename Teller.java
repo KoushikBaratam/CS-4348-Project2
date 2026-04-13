@@ -42,11 +42,49 @@ public class Teller extends Thread {
     }
 
     // stop teller thread
-    public void stopTeller() {
-
+public void stopTeller() {
+        running = false;
+        customerArrived.release();
     }
 
     public void run() {
 
+        try {
+            while (running) {
+
+                // if all customers done, stop
+                if (bank.allDone()) {
+                    break;
+                }
+
+                // teller becomes available
+                bank.log("Teller " + id + " []: ready to serve");
+                bank.log("Teller " + id + " []: waiting for a customer");
+
+                bank.addReadyTeller(this);
+
+                // wait for customer assignment
+                customerArrived.acquire();
+
+                if (!running) {
+                    break;
+                }
+
+                // basic interaction
+                bank.log("Teller " + id + " [Customer " +
+                        currentCustomer.id + "]: serving a customer");
+
+                bank.log("Teller " + id + " [Customer " +
+                        currentCustomer.id + "]: asks for transaction");
+
+                // more logic added next commit
+                finished.release();
+            }
+
+            bank.log("Teller " + id + " []: leaving for the day");
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
