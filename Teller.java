@@ -70,14 +70,68 @@ public void stopTeller() {
                     break;
                 }
 
-                // basic interaction
                 bank.log("Teller " + id + " [Customer " +
                         currentCustomer.id + "]: serving a customer");
 
                 bank.log("Teller " + id + " [Customer " +
                         currentCustomer.id + "]: asks for transaction");
 
-                // more logic added next commit
+                // withdrawal needs manager first
+                if (transaction.equals("Withdraw")) {
+
+                    bank.log("Teller " + id + " [Customer " +
+                            currentCustomer.id +
+                            "]: handling withdrawal transaction");
+
+                    bank.log("Teller " + id + " [Customer " +
+                            currentCustomer.id +
+                            "]: going to the manager");
+
+                    bank.manager.acquire();
+
+                    bank.log("Teller " + id + " [Customer " +
+                            currentCustomer.id +
+                            "]: getting manager's permission");
+
+                    Thread.sleep(rand.nextInt(26) + 5);
+
+                    bank.log("Teller " + id + " [Customer " +
+                            currentCustomer.id +
+                            "]: got manager's permission");
+
+                    bank.manager.release();
+
+                } else {
+
+                    bank.log("Teller " + id + " [Customer " +
+                            currentCustomer.id +
+                            "]: handling deposit transaction");
+                }
+
+                // Use safe
+                bank.log("Teller " + id + " [Customer " +
+                        currentCustomer.id + "]: going to safe");
+
+                bank.safe.acquire();
+
+                bank.log("Teller " + id + " [Customer " +
+                        currentCustomer.id + "]: enter safe");
+
+                Thread.sleep(rand.nextInt(41) + 10);
+
+                bank.log("Teller " + id + " [Customer " +
+                        currentCustomer.id + "]: leaving safe");
+
+                bank.safe.release();
+
+                bank.log("Teller " + id + " [Customer " +
+                        currentCustomer.id + "]: finishes " +
+                        transaction.toLowerCase() + " transaction.");
+
+                bank.log("Teller " + id + " [Customer " +
+                        currentCustomer.id +
+                        "]: wait for customer to leave.");
+
                 finished.release();
             }
 
