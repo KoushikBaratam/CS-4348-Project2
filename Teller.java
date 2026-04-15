@@ -38,7 +38,9 @@ public class Teller extends Thread {
 
     // assign customer to teller
     public synchronized void assignCustomer(Customer c, String trans) {
-
+    currentCustomer = c;
+    transaction = trans;
+    customerArrived.release();
     }
 
     // stop teller thread
