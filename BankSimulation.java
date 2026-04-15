@@ -45,6 +45,7 @@ public class BankSimulation {
         }
 
         System.out.println("Simulation finished.");
-
+        bank.log("The bank closes for the day.");
+        bank.closeLog();
     }
 }
